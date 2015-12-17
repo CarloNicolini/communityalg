@@ -1,4 +1,4 @@
-function ciu = consensus_clustering(D,method, reps, tau)
+function ciu = consensus_clustering_weighted(D,method, reps, tau)
 %CONSENSUS      consensus clustering
 %
 %   CIU = CONSENSUS(D,REPS,TAU) seeks a consensus partition of the 
@@ -48,8 +48,10 @@ while flg == 1
         ciu = (1:n)';
     else
         ci = zeros(n,reps);
+        qualities = zeros(reps,1);
         for iter = 1:reps
-            ci(:,iter) = method(dt);
+            [ci(:,iter),qual] = method(dt);
+            qualities(iter)=qual;
         end
         number_of_edges(dt)
         ci = relabel_partitions(ci);
@@ -57,7 +59,7 @@ while flg == 1
         nu = size(ciu,2);
         if nu > 1
             flg = 1;
-            D = agreement(ci)./reps;
+            D = agreement_weighted(ci,qualities);
         end
     end
 end
