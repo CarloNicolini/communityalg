@@ -51,7 +51,6 @@ while flg == 1
         for iter = 1:reps
             ci(:,iter) = method(dt);
         end
-        number_of_edges(dt)
         ci = relabel_partitions(ci);
         ciu = unique_partitions(ci,ones(reps,1));
         nu = size(ciu,2);

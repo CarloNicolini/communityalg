@@ -40,5 +40,5 @@ for i=1:ncomms
 end
 % Clustering parameters.
 pars = [intraedges,intrapairs,m,p];
-
+fprintf('mi=%d pi=%d m=%d p=%d\n',intraedges,intrapairs,m,p);
 S=compute_surprise(p, intrapairs, m, intraedges);
