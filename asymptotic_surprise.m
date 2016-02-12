@@ -31,7 +31,7 @@ for i=1:ncomms
     wc = sum(nonzeros(triu(g)));
     nc = length(nodes);
     pc = nc*(nc-1)/2;
-    fprintf('%d\t%.2f\t%d\t%d\n',i,wc,nc,pc);
+    %fprintf('%d\t%.2f\t%d\t%d\n',i,wc,nc,pc);
     intraedges = intraedges + wc;
     intrapairs = intrapairs + pc;
 end
