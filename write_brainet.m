@@ -13,7 +13,7 @@ end
 
 outfile = fopen(filename,'w');
 for i=1:n
-    fprintf(outfile,'%g\t%g\t%g\t%g\t%g\t%s\n',nodesXYZ(i,1),nodesXYZ(i,2),nodesXYZ(i,3),nodesColor(i),nodesSize(i),nodesLabel(i));
+    fprintf(outfile,'%g\t%g\t%g\t%g\t%g\t%s\n',nodesXYZ(i,1),nodesXYZ(i,2),nodesXYZ(i,3),nodesColor(i),nodesSize(i),nodesLabel{i});
 end
 
 fclose(outfile);
