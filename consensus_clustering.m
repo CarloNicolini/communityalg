@@ -57,6 +57,7 @@ while flg == 1
         if nu > 1
             flg = 1;
             D = agreement(ci)./reps;
+            warning('NON WEIGHTED AGREEMENT!!!');
         end
     end
 end
