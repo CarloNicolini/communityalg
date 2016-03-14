@@ -27,7 +27,6 @@ for c=1:ncomms
     % compute configuration model
     ks = sum(k(nodes));
     prob = (ks/(2*m))^2;
-    fprintf('c=%d mc=%d kc=%d prc=%f dq=%f\n',c,wc,ks,prob,wc/m-prob);
-    %q = q + wc/m - prob;
-    q = q + KL(wc/m , prob);
+    %fprintf('c=%d mc=%d kc=%d prc=%f dq=%f\n',c,wc,ks,prob,wc/m-prob);
+    q = q + wc/m - prob;
 end
