@@ -1,4 +1,4 @@
-function [sj,sp] = cluster_similarity(e1, e2, method)
+function [sj,sp] = cluster_similarity(e1, e2)
     sj = zeros([length(e2),length(e1)]);
     sp = zeros([length(e2),length(e1)]);
     % Count the total number of nodes in the network
