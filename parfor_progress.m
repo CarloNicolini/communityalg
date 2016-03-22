@@ -33,7 +33,7 @@ function percent = parfor_progress(N)
 
 % By Jeremy Scheff - jdscheff@gmail.com - http://www.jeremyscheff.com/
 
-error(nargchk(0, 1, nargin, 'struct'));
+error(narginchk(0, 1, nargin, 'struct'));
 
 if nargin < 1
     N = -1;
