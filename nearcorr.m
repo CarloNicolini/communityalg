@@ -25,7 +25,7 @@ if nargin < 2 || isempty(tol), tol = length(A)*eps*[1 1]; end
 if nargin < 3 || isempty(flag), flag = 0; end
 if nargin < 4 || isempty(maxits), maxits = 100; end
 if nargin < 6 || isempty(w), w = ones(length(A),1); end
-if nargin < 7, prnt = 1; end
+if nargin < 7, prnt = 0; end
  
 n = length(A);
 if flag >= 1
