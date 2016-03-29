@@ -70,7 +70,7 @@ def perp( a ) :
 # line segment a given by endpoints a1, a2
 # line segment b given by endpoints b1, b2
 # return 
-def seg_intersect(a1,a2, b1,b2) :
+def seg_intersect(a1,a2, b1,b2):
     da = a2-a1
     db = b2-b1
     dp = a1-b1
