@@ -4,3 +4,4 @@ n = length(A);
 D = eye(n);
 D(1:n+1:n*n) = degrees_und(A);
 L = D-A;
+L = L./sum(sum(A));

@@ -6,4 +6,4 @@ function DKL = KL_similarity(A1, A2)
 L1 = graph_laplacian(A1);
 L2 = graph_laplacian(A2);
 
-DKL = sum(diag(L1.*(log(L1)-log(L2))))
+DKL = sum(diag(L1.*(log(L1)-log(L2))));
