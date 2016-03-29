@@ -43,23 +43,39 @@ def writepajek(A,filename):
 def drawbipartite(A):
     # Create the nx bipartite graph
     SP = np_to_scipy_matrix(A)
+
     B = nx.bipartite.from_biadjacency_matrix(SP,create_using=None)
+    m = nx.number_of_edges(B)
+    n = nx.number_of_nodes(B)
+
     # Compute the nodes positions
     X,Y = nx.bipartite.sets(B)
-    pos = dict()
-    pos.update( [n,[1,i] ] for i,n in enumerate(X))
-    pos.update( [n,[2,i] ] for i,n in enumerate(Y))
-    nx.draw(B,pos=pos,
-    	with_labels=True,
-    	edge_color=np.random.random(nx.number_of_edges(B)),
+    n1,n2 = len(X),len(Y)
+    nodepos = dict()
+    nodepos.update( [n,(-1,i) ] for i,n in enumerate(X))
+    nodepos.update( [n,(1,i) ] for i,n in enumerate(Y))
+    print nodepos
+    """
+    nx.draw(B,pos=nodepos,
+    	with_labels=True
+    	#edge_color=np.random.random(nx.number_of_edges(B)),
     	#edge_cmap=plt.get_cmap('Blues'), 
-    	node_color=np.random.random(nx.number_of_nodes(B))
+    	#node_color=np.random.random(nx.number_of_nodes(B))
     	#cmap=plt.get_cmap('Reds')
     	)
-    import matplotlib as mpl
-    import matplotlib.pyplot as plt
-    plt.show()
-
+    """
+    #import matplotlib as mpl
+    #import matplotlib.pyplot as plt
+    #plt.show()
+    edges = []
+    for node1,p in nodepos.iteritems():
+        for node2,p in nodepos.iteritems():
+            if B.is_edge(node1,node2):
+                edges.append([])
+                
+    all_edges_pos = np.zeros(m,4)
+    print X
+    all_edges_pos[X]
 
 def perp( a ) :
     b = empty_like(a)
