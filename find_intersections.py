@@ -1,4 +1,5 @@
 from __future__ import print_function
+import sys
 import numpy as np
 import math
 import random
@@ -49,15 +50,17 @@ if __name__ == '__main__':
     A[:,0]=0
     A[:,2]=5
 
-    plt.subplots(1,2)
+    plt.subplots(2,sharex=True)
     
-    plt.plot([(x,y) for x,y in zip(A[:,0],A[:,2])],[(x,y) for x,y in zip(A[:,1],A[:,3])])
+    for i in range(0,nrows):
+        plt.plot([A[i,0],A[i,2]],[A[i,1],A[i,3]])
+
     points = crosses(A)
-    return
     plt.plot([p.x for p in points],[p.y for p in points],'ko')
 
     plt.draw()
     plt.show()
+
     init_state = range(0,nrows)
     shuffle(init_state)
     print(init_state)
@@ -73,6 +76,7 @@ if __name__ == '__main__':
 
     plt.draw()
     plt.show()
+    sys.exit(0)
 
     crossmin = CrossMinimizer(init_state,A)
     crossmin.copy_strategy = "slice"
