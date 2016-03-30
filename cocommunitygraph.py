@@ -6,6 +6,8 @@ import networkx as nx
 from scipy.sparse import csr_matrix as np_to_scipy_matrix
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import random
+import find_intersections as fi
 
 def writedot(A,filename):
     graphstr = "graph G{\n"
@@ -47,15 +49,27 @@ def drawbipartite(A):
     B = nx.bipartite.from_biadjacency_matrix(SP,create_using=None)
     m = nx.number_of_edges(B)
     n = nx.number_of_nodes(B)
-
+    B  = nx.convert_node_labels_to_integers(B)
+    #B = nx.relabel_nodes(B,lambda x: x+1)
     # Compute the nodes positions
-    X,Y = nx.bipartite.sets(B)
-    n1,n2 = len(X),len(Y)
+    nodesleft,nodesright = nx.bipartite.sets(B)
+    n1,n2 = len(nodesleft),len(nodesright)
+    nLeft = len(nodesleft)
+    nRight = len(nodesright)
+
     nodepos = dict()
-    nodepos.update( [n,(-1,i) ] for i,n in enumerate(X))
-    nodepos.update( [n,(1,i) ] for i,n in enumerate(Y))
-    print nodepos
-    """
+    nodepos.update( [n,(-1,max(nLeft,nRight)-i) ] for i,n in enumerate(nodesleft))
+    nodepos.update( [n,(1,max(nLeft,nRight)-i) ] for i,n in enumerate(nodesright))
+    
+    # Do the node position permutation
+    lines = []
+    for e in B.edges():
+        x0 = nodepos[e[0]][0]
+        y0 = nodepos[e[0]][1]
+        x1 = nodepos[e[1]][0]
+        y1 = nodepos[e[1]][1]
+        lines.append( np.array([x0,y0,x1,y1] ) )
+    lines = np.array(lines)
     nx.draw(B,pos=nodepos,
     	with_labels=True
     	#edge_color=np.random.random(nx.number_of_edges(B)),
@@ -63,19 +77,10 @@ def drawbipartite(A):
     	#node_color=np.random.random(nx.number_of_nodes(B))
     	#cmap=plt.get_cmap('Reds')
     	)
-    """
-    #import matplotlib as mpl
-    #import matplotlib.pyplot as plt
-    #plt.show()
-    edges = []
-    for node1,p in nodepos.iteritems():
-        for node2,p in nodepos.iteritems():
-            if B.is_edge(node1,node2):
-                edges.append([])
-                
-    all_edges_pos = np.zeros(m,4)
-    print X
-    all_edges_pos[X]
+    plt.show()
+
+    print fi.num_crosses(lines)
+    
 
 def drawbipartite2(A):
     from matplotlib.path import Path

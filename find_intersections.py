@@ -1,72 +1,91 @@
-from __future__ import print_function
+#from __future__ import print_function
 import sys
 import numpy as np
 import math
 import random
 from random import shuffle
 from simanneal import Annealer
+import networkx as nx
+from scipy.sparse import csr_matrix as np_to_scipy_matrix
+
+eps = np.finfo(float).eps
 #import matplotlib.pyplot as plt
-
-def crosses(lines):
-    from shapely.geometry import LineString, Point
-    # returns the number of crossings between lines in the list
-    points = []
-    for i,l1 in enumerate(lines):
-        line_shapely1 = LineString([(l1[0],l1[1]),(l1[2],l1[3])])
-        for j,l2 in enumerate(lines):
-            if j>i:
-                line_shapely2 = LineString([(l2[0],l2[1]),(l2[2],l2[3])])
-                p = line_shapely1.intersection(line_shapely2)
-                
-                if not p.is_empty and isinstance(p,Point):
-                    points.append(p)
-    return points
-
-def num_crosses(lines):
-    return len(crosses(lines))
 
 
 class CrossMinimizer(Annealer):
-    def __init__(self, lines,nodes1,nodes2):
-        self.lines = lines
-        self.nodes1 = nodes1
-        self.nodes2 = nodes2
-        # state contains the variables of y position of nodes1,nodes2
-        # as follows:
-        # | y_(n1)_1
-        # | y_(n1)_2
-        # | y_(n1)_3
-        # | y_(n1)_|n1|
-        # | .....
-        # | y_(n2)_1
-        # | y_(n2)_2
-        # | y_(n2)_3
-        # | y_(n2)_|n2|
-        super(CrossMinimizer,self).__init__(nodes1+nodes2)
+    def __init__(self, state, graph):
+        self.graph = graph # a networkx Graph object to represent a bipartite graph
+        self.state = state
+        self.nodesleft, self.nodesright = nx.bipartite.sets(self.graph)
+        self.nA = len(self.nodesleft)
+        self.nB = len(self.nodesright)
+        
+        self.nodepos={}
+        self.nodepos.update( [n,(-1,max(self.nA,self.nB)-i) ] for i,n in enumerate(self.nodesleft))
+        self.nodepos.update( [n,(1,max(self.nA,self.nB)-i) ] for i,n in enumerate(self.nodesright))    
+        # Generate the set of lines for all the edges
+        self.lines = []
+        for e in graph.edges():
+            n0 = self.state[e[0]]
+            n1 = self.state[e[1]]
+            x0 = self.nodepos[n0][0]
+            y0 = self.nodepos[n0][1]
+            x1 = self.nodepos[n1][0]
+            y1 = self.nodepos[n1][1]
+            self.lines.append( np.array([x0,y0,x1,y1] ) )
+        self.lines = np.array(self.lines)
+        super(CrossMinimizer,self).__init__(state)
+
+    def crosses(self,lines):
+        from shapely.geometry import LineString, Point
+        # returns the number of crossings between lines in the list
+        points = []
+        for i,l1 in enumerate(lines):
+            line_shapely1 = LineString([(l1[0],l1[1]),(l1[2],l1[3])])
+            for j,l2 in enumerate(lines):
+                # avoid points that share the same extremal point
+                if j>i:
+                    line_shapely2 = LineString([(l2[0],l2[1]),(l2[2],l2[3])])
+                    p = line_shapely1.intersection(line_shapely2)
+                    if not p.is_empty and isinstance(p,Point):
+                        points.append(p)
+        return points
+
+    def num_crosses(self,lines):
+        return len(self.crosses(lines))
 
     def move(self):
         """ Swaps two nodes on the left and on the right """
-        r = np.array(xrange(0,len(self.nodes1)-1))
-        shuffle(r)
-        self.state[range(0,len(self.nodes1)-1)] = self.state[r]
+        # Choose two random nodes in the nodesetA to swap
+        nodes_swap_left = np.random.random_integers(0,self.nA-1,2)
+        # Do the swap
+        self.state[nodes_swap_left[0]],self.state[nodes_swap_left[1]] = self.state[nodes_swap_left[1]],self.state[nodes_swap_left[0]]
         
+        # Choose two random nodes in the nodesetA to swap
+        nodes_swap_right = np.random.random_integers(self.nA,self.nA+self.nB-1,2)
+        # Do the swap
+        self.state[nodes_swap_right[0]],self.state[nodes_swap_right[1]] = self.state[nodes_swap_right[1]],self.state[nodes_swap_right[0]]
+        # Update the self.line structure
+        self.lines = []
+        for e in self.graph.edges():
+            n0 = self.state[e[0]]
+            n1 = self.state[e[1]]
+            x0 = self.nodepos[n0][0]
+            y0 = self.nodepos[n0][1]
+            x1 = self.nodepos[n1][0]
+            y1 = self.nodepos[n1][1]
+            self.lines.append( np.array([x0,y0,x1,y1] ) )
 
     def energy(self):
-        L = np.array(self.lines)
-        n1 = len(self.nodes1)
-        n2 = len(self.nodes2)
-
-        L = np.hstack( (L[self.state[0:n1-1],0:1],L[self.state[n1+1:n2-1],2:3]) )
-        return num_crosses(L)
+        return self.num_crosses(self.lines)
 
 
 if __name__ == '__main__':
-    nrows=10
-    A=np.random.randint(-5,5,[nrows,4])
-    # Fix the left and right columns
-    A[:,0]=0
-    A[:,2]=5
+    filename = sys.argv[1]
+    A = np.loadtxt(filename,delimiter=',')
+    G=nx.bipartite.from_biadjacency_matrix(np_to_scipy_matrix(A))
 
+    #G = nx.bipartite.from_biadjacency_matrix(np.loadtxt(filename, delimiter=','))
     # plt.subplots(2,sharex=True)
     
     # for i in range(0,nrows):
@@ -85,7 +104,12 @@ if __name__ == '__main__':
     # #plt.draw()
     # #plt.show()
     # #sys.exit(0)
-    init_state
-    crossmin = CrossMinimizer(init_state,A,[1,2,3],[4,5])
+    
+    crossmin = CrossMinimizer(range(0,7),G)
     crossmin.copy_strategy = "slice"
-    state,crosses = crossmin.anneal()    
+    X = crossmin.auto(minutes=0.1,steps=10)
+    print crossmin.state
+    print crossmin.lines
+    print "#crossings = ",crossmin.energy()
+    #state, ncrossings = crossmin.anneal()
+    print X
