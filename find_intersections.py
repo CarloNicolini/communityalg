@@ -51,6 +51,10 @@ class CrossMinimizer(Annealer):
                         points.append(p)
         return points
 
+    def crosses2(self):
+        from shapely.geometry import LineString, Point
+        
+
     def num_crosses(self,lines):
         return len(self.crosses(lines))
 
