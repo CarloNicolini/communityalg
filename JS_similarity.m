@@ -3,8 +3,8 @@ function DJS = JS_similarity(A1,A2)
 % De Domenico et al, Mapping multiplex hubs in human functional brain network (2016)
 % The similarity of two layers can be calculated in terms of differences in their entropy. Given two rescaled Laplacian matrices L[α] and L[β], it is possible to quantify to which extent layer α is different from layer β by their Kullback-Liebler divergence
 
-L1 = graph_laplacian(A1);
-L2 = graph_laplacian(A2);
+L1 = graph_laplacian(A1)/sum(degrees_und(A1)); %rescaled combinatorial laplacian of the graph
+L2 = graph_laplacian(A2)/sum(degrees_und(A2)); %rescaled combinatorial laplacian of the graph
 
 Lm = 1/2*(L1+L2);
 DJS = 1/2*KL_similarity(A1,Lm) + 1/2*KL_similarity(A2,Lm);

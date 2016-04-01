@@ -44,7 +44,7 @@ class CrossMinimizer(Annealer):
             line_shapely1 = LineString([(l1[0],l1[1]),(l1[2],l1[3])])
             for j,l2 in enumerate(lines):
                 # avoid points that share the same extremal point
-                if j>i:
+                if j>i and (l1[1]==l2[1] ) : # qui mettere le linee non dello stesso vertice
                     line_shapely2 = LineString([(l2[0],l2[1]),(l2[2],l2[3])])
                     p = line_shapely1.intersection(line_shapely2)
                     if not p.is_empty and isinstance(p,Point):
@@ -58,13 +58,17 @@ class CrossMinimizer(Annealer):
         """ Swaps two nodes on the left and on the right """
         # Choose two random nodes in the nodesetA to swap
         nodes_swap_left = np.random.random_integers(0,self.nA-1,2)
+        nodes_swap_left=[0,3]
+        print "Swapping %d (%s) with %d (%s)" % (nodes_swap_left[0],self.nodepos[nodes_swap_left[0]],nodes_swap_left[1],self.nodepos[nodes_swap_left[1]])
         # Do the swap
         self.state[nodes_swap_left[0]],self.state[nodes_swap_left[1]] = self.state[nodes_swap_left[1]],self.state[nodes_swap_left[0]]
         
         # Choose two random nodes in the nodesetA to swap
-        nodes_swap_right = np.random.random_integers(self.nA,self.nA+self.nB-1,2)
+        #nodes_swap_right = np.random.random_integers(self.nA,self.nA+self.nB-1,2)
         # Do the swap
-        self.state[nodes_swap_right[0]],self.state[nodes_swap_right[1]] = self.state[nodes_swap_right[1]],self.state[nodes_swap_right[0]]
+        # Update nodepos
+        self.nodepos[nodes_swap_left[0]],self.nodepos[nodes_swap_left[1]] =         self.nodepos[nodes_swap_left[1]],self.nodepos[nodes_swap_left[0]]
+        #self.state[nodes_swap_right[0]],self.state[nodes_swap_right[1]] = self.state[nodes_swap_right[1]],self.state[nodes_swap_right[0]]
         # Update the self.line structure
         self.lines = []
         for e in self.graph.edges():
@@ -75,9 +79,23 @@ class CrossMinimizer(Annealer):
             x1 = self.nodepos[n1][0]
             y1 = self.nodepos[n1][1]
             self.lines.append( np.array([x0,y0,x1,y1] ) )
+        self.lines = np.array(self.lines)
 
     def energy(self):
         return self.num_crosses(self.lines)
+
+    def plot(self):
+        import matplotlib.pyplot as plt
+        print self.nodepos
+        nx.draw(self.graph,self.nodepos,with_labels=True)
+        plt.show()
+
+    def info(self):
+        print("Current crossings = %d") % self.energy()
+        for n,xy in self.nodepos.iteritems():
+            print("Node %d x=%d y=%d") % (n,xy[0],xy[1])
+        for r in self.lines:
+            print r
 
 
 if __name__ == '__main__':
@@ -107,9 +125,16 @@ if __name__ == '__main__':
     
     crossmin = CrossMinimizer(range(0,7),G)
     crossmin.copy_strategy = "slice"
-    X = crossmin.auto(minutes=0.1,steps=10)
-    print crossmin.state
-    print crossmin.lines
-    print "#crossings = ",crossmin.energy()
+    #X = crossmin.auto(minutes=1,steps=100)
+    #crossmin.plot()
+    crossmin.info()
+    crossmin.move()
+
+    print "========"
+    crossmin.info()
+    crossmin.plot()
+    # print crossmin.state
+    # print crossmin.lines
+    # print "#crossings = ",crossmin.energy()
+    # crossmin.plot()
     #state, ncrossings = crossmin.anneal()
-    print X

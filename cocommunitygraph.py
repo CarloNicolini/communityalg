@@ -78,7 +78,6 @@ def drawbipartite(A):
     	#cmap=plt.get_cmap('Reds')
     	)
     plt.show()
-
     print fi.num_crosses(lines)
     
 
