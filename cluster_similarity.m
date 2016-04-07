@@ -1,10 +1,18 @@
 function [sj,sp] = cluster_similarity(e1, e2)
+%CLUSTER_SIMILARITY    Compute the cluster similarity between two groups,
+%   Input: group1 as compute from membership2groups function
+%          group2 as compute from membership2groups function
+%   Output:
+%         sj: Jaccard similarty
+%         sp: p-value of the cluster homogeneity
+%         http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0099755#pone.0099755.e106
+%
+%   Carlo Nicolini, Istituto Italiano di Tecnologia (2015).
     sj = zeros([length(e2),length(e1)]);
     sp = zeros([length(e2),length(e1)]);
     % Count the total number of nodes in the network
     N =  sum(cellfun(@length,e1));
-    % Use the p-value of the cluster homogeneity:
-    %http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0099755#pone.0099755.e106
+    
     for i=1:length(e2)
         c2i = e2{i};
         for j=1:length(e1)
