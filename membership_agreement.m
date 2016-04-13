@@ -5,7 +5,6 @@ if length(m1)~=length(m2)
     error('Vectors must be the same size');
 end
 
-S = confusionmat(m1,m2);
-%[sjacc,sp] = membership_similarity(m1,m2);
+[sjacc,sp] = membership_similarity(m1,m2);
 n = length(m1);
 v=zeros(length(m1),1);
