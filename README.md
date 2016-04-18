@@ -4,10 +4,10 @@ Expands BrainConnectivity toolbox.
 
 # Algorithms and methods
 - *JS_similarity.m*
-- *KL.m*
-- *KL_similarity.m*
-- *ami.m* Code to compute adjusted mutual information.
-- *association_score.m* Compute association score.
+- *KL.m* Returns the binary Kullback-Leibler divergence between Bernoulli distribution `p` and `q`.
+- *KL_similarity.m* Returns the Kullback-Leibler similarity between the combinatorial Laplacian of two graphs
+- *ami.m* Returns the adjusted mutual information between two membership vectors.
+- *association_score.m* Returns the association score between pairs of communities specified by the graph and membership.
 - *asymptotic_modularity.m* Compute asymptotic modularity of a graph with respect to a membership vector.
 - *asymptotic_modularity_sum.m*  TODO
 - *asymptotic_surprise.m* Compute asymptotic surprise of a graph with respect to a membership vector.
@@ -67,8 +67,8 @@ Expands BrainConnectivity toolbox.
 - *threshold_by_num_edges.m* Returns a graph thresholded to have a specific number of edges.
 - *vonneumann_entropy.m* Returns the VonNeumann quantum entropy of graph `Brauenstein et al.` "Ann. of Combinatorics, 10, no 3 (2006), 291-317."
 - *write_brainet.m* Write a graph with coordinates of nodes and membership to Brainet format.
-- *write_brainet_community.m*
-- *writetoEdgesList.m*
+- *write_brainet_community.m* TODO
+- *writetoEdgesList.m* TODO
 - *writetoPAJ_labels.m*
 - *writetoPAJ_labels_coords.m*
 
