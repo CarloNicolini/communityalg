@@ -24,7 +24,9 @@ if ~issorted(diag(D))
 end
 % Check that the eigendecomposition is fine
 fprintf('Eigendecomposition abs error is %g\n', sum(sum(C*V-V*D)));
-dD=diag(D); %eigenvalues as 1D array sorted with the largest at the end
+D=D.*(D>=0); % set the very small negative eigenvalues to zero
+eigenvals=diag(D); % eigenvalues as 1D array sorted with the largest at the end
+
 % Decompose the original correlation matrix into three components
 % C = Cr + Cg + Cm
 % Cm is the eigendecomposition of global mode Cm = lambda_max |v_max> <v_max|
@@ -35,21 +37,21 @@ dD=diag(D); %eigenvalues as 1D array sorted with the largest at the end
 % Since D is sorted with largest eigenvalues on the last diagonal element,
 % the index of lambda_m is N
 % Build the market mode correlation matrix
-im = find(dD==max(dD));
-res.dD=dD;
+im = find(eigenvals==max(eigenvals));
+res.eigenvals=eigenvals; % copy it to the output array
 res.Cm = D(im,im).*V(:,im)*V(:,im)';
 
 
 % Build the random-noise correlations
 res.Cr = zeros(N);
-ir = find(dD<=res.lambda_plus)';
+ir = find(eigenvals<=res.lambda_plus)';
 for k=ir
     res.Cr = res.Cr + D(k,k).*(V(:,k)*V(:,k)');
 end
 
 % Build the remaining correlations as C = Cm + Cr + Cg
 res.Cg = zeros(N);
-ig = find(dD<max(dD) & dD>res.lambda_plus)';
+ig = find(eigenvals<max(eigenvals) & eigenvals>res.lambda_plus)';
 for k=ig
     res.Cg = res.Cg + D(k,k).*(V(:,k)*V(:,k)');
 end

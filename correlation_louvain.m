@@ -1,4 +1,4 @@
-function [M Q]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
+function [M, Q, res]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
 %CORRELATION_LOUVAIN     Optimal community structure from correlation matrix
 %   Following the article of MacMahon, Garlaschelli, PhysRev X (2015)
 %   Community detection for correlation matrices
@@ -56,8 +56,6 @@ Cnorm=sum(CIJ(:)); % sum of edges (each undirected edge is counted twice)
 
 % Compute the random matrix theory RMT spectrum of CIJ
 res = rmtdecompose(CIJ,T);
-[res.lambda_plus,res.lambda_minus]
-res.dD
 if ~exist('ECIJ','var') || isempty(ECIJ)
     ECIJ = eye(n); % assume the null model for infinitely long time series without global mode
 end
