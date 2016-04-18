@@ -3,9 +3,7 @@ Algorithms and functions in Matlab for community detection in networks.
 Expands BrainConnectivity toolbox.
 
 # Algorithms and methods
-- *JS_similarity.m*
-- *KL.m* Returns the binary Kullback-Leibler divergence between Bernoulli distribution `p` and `q`.
-- *KL_similarity.m* Returns the Kullback-Leibler similarity between the combinatorial Laplacian of two graphs
+
 - *ami.m* Returns the adjusted mutual information between two membership vectors.
 - *association_score.m* Returns the association score between pairs of communities specified by the graph and membership.
 - *asymptotic_modularity.m* Compute asymptotic modularity of a graph with respect to a membership vector.
@@ -34,7 +32,10 @@ Expands BrainConnectivity toolbox.
 - *image_to_network.m* Convert a gray index image to its corresponding adjacency graph.
 - *imagesctxt.m* Show a matrix like `imagesc` but with text values of elements displayed on the pixels.
 - *isoctave.m* Returns true if using Octave, false if using Matlab.
+- *jensen_shannon_sim.m* Returns the Jensen-Shannon symmetrized information theoretic distance between two graph Laplacians.
 - *k_regular.m* Generate a `k`-regular graph, a graph where the degree of every vertex is `k`.
+- *KL.m* Returns the binary Kullback-Leibler divergence between Bernoulli distribution `p` and `q`.
+- *kullback_leibler_sim.m* Returns the Kullback-Leibler divergence between two graph Laplacians.
 - *logHyperProbability.m* Compute the logarithm of the hypergeometric probability in base 10.
 - *membership2groups.m* Convert a membership vector to a cell of arrays of nodes in every community.
 - *membership_agreement.m* DEPRECATE
