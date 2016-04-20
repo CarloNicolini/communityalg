@@ -1,4 +1,4 @@
-function best_membership = method_best(A, method, nreps)
+function [best_membership,best_qual] = method_best(A, method, nreps)
 
 best_qual = -inf;
 best_membership = [];
