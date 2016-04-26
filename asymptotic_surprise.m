@@ -10,7 +10,7 @@ function [S, pars] = asymptotic_surprise(W, ci)
 %   Inputs      A,  undirected weighted or unweighted network.
 %               ci, membership vector
 %
-%   Outputs:    S,  value of Asymptotic Surprise (natural logs).
+%   Outputs:    S,  value of Asymptotic Surprise (base10 logs).
 %               pars, partition parameters. [intraclusteredges,
 %               intracluster_pairs, number of edges, number of pairs]
 %
