@@ -9,10 +9,7 @@ function [S,pars] = surprise(A, ci)
 %   Outputs:    S,  value of Surprise (is log10 base, to get natural logarithm,
 %                   multiply S by log(10)).
 %
-%               pars, partition parameters. [intraclusteredges,
-%               intracluster_pairs, number of edges, number of pairs]
-%
-%   Carlo Nicolini, Istituto Italiano di Tecnologia (2015).
+%   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 %
 
 if length(unique(A(:))) ~= 2
@@ -20,6 +17,12 @@ if length(unique(A(:))) ~= 2
     warning('Input matrix is not binary {0,1}. Ignoring edge weights to compute Surprise.');
 end
 
-[mc, pc, m, p] = partition_params(A,ci);
+% Get the block matrix
+[B,C,~,n,m,p]=comm_mat(A,ci);
 
-S=compute_surprise(p, sum(pc), m, sum(mc));
+nc = sum(C,2); % number of nodes per community
+
+mc = sum(diag(B)); % number of intracluster edges
+pc = sum(nc.*(nc-1)/2); % number of intracluster pairs
+
+S=compute_surprise(p, pc, m, mc);

@@ -1,7 +1,5 @@
 function q = modularity(W,ci)
-%ASYMPTOTIC_MODULARITY
-
-%ASYMPTOTIC_MODULARITY      Compute modularity of a vertex partition on a binary network.
+%MODULARITY      Compute modularity of a vertex partition on a binary network.
 %
 %
 %   Inputs      W,  undirected weighted or unweighted network.
@@ -13,20 +11,8 @@ function q = modularity(W,ci)
 %
 %   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 %
+[C,B,K,~,m] = comm_mat(W,ci);
 
-n = length(W);
-m = sum(nonzeros(triu(W)));
-ncomms = length(unique(ci)); % number of communities
-
-q=0; % asympt modularity value
-k=degrees_und(W);
-for c=1:ncomms
-    nodes = find(ci==c);
-    g = W(nodes,nodes);
-    wc = sum(nonzeros(triu(g))); % intracomm edges
-    % compute configuration model
-    ks = sum(k(nodes));
-    prob = (ks/(2*m))^2;
-    %fprintf('c=%d mc=%d kc=%d prc=%f dq=%f\n',c,wc,ks,prob,wc/m-prob);
-    q = q + wc/m - prob;
-end
+Kc = K/(2*m); % degree matrix
+Mc = diag(C)./m; % intracluster weights matrix
+q=sum(Mc-Kc.^2); % modularity as difference

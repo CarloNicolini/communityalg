@@ -25,23 +25,7 @@ for c=1:ncomms
     g = W(nodes,nodes);
     wc = sum(nonzeros(triu(g))); % intracomm edges
     % compute configuration model
-    ks = sum(k(nodes));
+    ks = sum(k(nodes))
     prob = (ks/(2*m))^2;
     q = q + KL(wc/m, prob);
-end
-
-
-function D = KL(q,p)
-if (q==p)
-    D=0;
-    return;
-end
-
-D = 0.0;
-if (q > 0.0 && p > 0.0)
-    D = D + q*log10(q/p);
-end
-
-if (q < 1.0 && p < 1.0)
-    D = D + (1.0-q)*log10((1.0-q)/(1.0-p));
 end

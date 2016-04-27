@@ -14,6 +14,7 @@ Expands BrainConnectivity toolbox.
 - **clustering_entropy.m** Compute the clustering entropy of an agreement matrix as in "Gfeller, Newman, 2006".
 - **community_robustness_weighted.m** TODO
 - **community_size2memb.m** Convert an array where every element is the size of a clique to the correspondig membership vector.
+- **comm_mat.m** Returns the block matrix of a graph and its community structure as membership.
 - **compute_surprise.m** Compute the surprise given surprise paramenters.
 - **consensus_clustering.m** TODO
 - **consensus_clustering_weighted.m** TODO
