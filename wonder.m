@@ -1,4 +1,4 @@
-function [S, pars] = wonder(W, ci)
+function [w, pars] = wonder(W, ci)
 %WONDER
 %WONDER      Compute wonder of a vertex partition on a binary network.
 %
@@ -6,7 +6,7 @@ function [S, pars] = wonder(W, ci)
 %   Inputs      A,  undirected weighted or unweighted network.
 %               ci, membership vector
 %
-%   Outputs:    S,  value of Wonder (natural logs).
+%   Outputs:    S,  value of Wonder (base 10 logs).
 %               pars, partition parameters. [intraclusteredges,
 %               intracluster_pairs, number of edges, number of pairs]
 %
@@ -34,8 +34,11 @@ end
 % Clustering parameters.
 pars = [intraedges,intrapairs,m,p];
 % Use Kullback Leibler divergence to compute asymptotic surprise
+x = intraedges/m;
+y = (intrapairs/p);
+mxy = (x+y)/2;
 
-S = (KL(intraedges/m, (intraedges/m+intrapairs/p)/2) + KL(intrapairs/p, (intraedges/m+intrapairs/p)/2))/2;
+w = (KL(x,mxy) + KL(y,mxy))/2;
 
 function D = KL(q,p)
 
@@ -46,9 +49,9 @@ end
 
 D = 0.0;
 if (q > 0.0 && p > 0.0)
-    D = D + q*log(q/p);
+    D = D + q*log10(q/p);
 end
 
 if (q < 1.0 && p < 1.0)
-    D = D + (1.0-q)*log((1.0-q)/(1.0-p));
+    D = D + (1.0-q)*log10((1.0-q)/(1.0-p));
 end
