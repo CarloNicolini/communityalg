@@ -11,8 +11,8 @@ function q = modularity(W,ci)
 %
 %   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 %
-[C,B,K,~,m] = comm_mat(W,ci);
+[B,C,K,~,m] = comm_mat(W,ci);
 
 Kc = K/(2*m); % degree matrix
-Mc = diag(C)./m; % intracluster weights matrix
+Mc = diag(B)./m; % intracluster weights matrix
 q=sum(Mc-Kc.^2); % modularity as difference
