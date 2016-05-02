@@ -1,17 +1,14 @@
-function [p,numLog] = association_surprisal_bu(A,ci)
+function [p,KTot,Kin] = association_surprisal_bu(A,ci)
 %bincoeff(kc,m_c) è il numero di combinazioni di kc stubs in insiemi di m_c/2 stubs
 %il numero totale di stubs è 2m il numero totale di intraedges è sum(mc)
 %bincoeff(kc,mc)/bincoeff(2m,m)
 
-[B,C,K,~,m] = comm_mat(A,ci);
+[B,C,KTot,~,m] = comm_mat(A,ci);
 ncomm = size(B,1);
-KTot=2*sum(B);
+% number of stubs in comm c is twice number of edges in c 
 Kin=2*diag(B)';
-KTot
-Kin
-for i=1:ncomm
-    p(i)=logbincoeff(KTot(i),Kin)-logbincoeff(sum(KTot),sum(Kin));
-end
-p
-p=-sum(p);
-%p=bsxfun(@(i,j)(logbincoeff(i,j)),K,2*M');
+sKTot=sum(KTot);
+sKin=sum(Kin);
+den = logbincoeff(sKTot,sKin);
+logpis=bsxfun(@(i,j)(logbincoeff(i,j)-den),KTot(:),Kin(:));
+p=-sum(logpis);
