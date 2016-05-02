@@ -7,7 +7,7 @@ function x = logC(k, n)
 %
 %   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 
-if(k == n || ~k)
+if (k == n || ~k)
     x = 0;
 else
     t = n - k;
