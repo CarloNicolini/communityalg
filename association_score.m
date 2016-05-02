@@ -1,44 +1,31 @@
-function [ass, eij] = association_score(A,membership)
-%ASSOCIATION_SCORE      Computes the association score between communities
-%                       in the network A.
+function [ass, eij] = association_score(A,ci)
+%ASSOCIATION_SCORE      Computes the association score of communities in the network A.
 %
-%   If you use this program, please cite:
+%   Inputs:     A, the adjacency matrix
+%               ci, the membership vector
+%   Outputs:    ass, the association score
+%               eij, a square block matrix with the number of links from
+%               community i to community j.
 %
-%   Ruan, Jianhua, and Weixiong Zhang. 2008.
-%   “Identifying Network Communities with a High Resolution.”
-%   Physical Review E 77 (1) (January 14): 016104.
-%   doi:10.1103/PhysRevE.77.016104.
-%   http://link.aps.org/doi/10.1103/PhysRevE.77.016104.
-%
-%
-%   The theoretical p-value can be estimated analytically with a hypergeometric distribution with parameters M, ai, and aj.
-%   This relationship can be best explained by considering  how  the  network  randomization  works.
-%   Conceptually, to randomly rewire a network, we break each edge into two halves, or stubs, and then randomly  reconnect  these  stubs
-%   into edges. Therefore, for a given network with m edges, we have a box of
-%   M=2*m edge stubs.
-%   The probability to observe exactly k edges between community ci and cj is equivalent to the probability of randomly drawing ai stubs from the box and observing k of them connected to the vertices in cj. This
-%   probability is given by:
-%
-%   binomial(aj,k)*binomial(M-aj,ai-k)/binomial(M,ai)
-%
-%   the p-value for observing at least eij edges between ci and cj, therefor
-%   can be computed by:
-%
+%   The p-value for observing at least eij edges between community i and community j can be computed by:
 %   P = sum(binomial(aj,k)*binomial(M-aj,ai-k)/binomial(M,ai), {k,eij,min(ai,aj)})
-%
-%   Given the p-value of observing some number of edges between a pair of communities, we compute an association score between the two communities
-%
+%   Given the p-value of observing some number of edges between a pair of communities, we compute an association 
+%   score between the two communities:
 %   S(ci,cj) = -log10(P)
 %
 %   Note that is also defined for i=j, which can be used to define the statistical significance of a community.
 %   We define two communities as associated if their association score between
 %   two communities is greater than 2 (p<0.01) and affiliated if greater than 1 (p>0.1).
 %
-%   Carlo Nicolini, Istituto Italiano di Tecnologia (2015).
+%   If you use this program, please cite:
+%   Ruan, Jianhua, and Weixiong Zhang. 2008.
+%   "Identifying Network Communities with a High Resolution."
+%   Phys. Rev. E 77 (1) (January 14): 016104.
 %
+%   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 
-ncomms = length(unique(membership));
-if max(membership) ~= ncomms
+ncomms = length(unique(ci));
+if max(ci) ~= ncomms
     error('Non continuous membership vector. Must reindex membership.');
 end
 
@@ -49,7 +36,7 @@ eij = zeros(ncomms,ncomms);
 
 for i=1:ncomms
     for j=1:ncomms
-        B = A(i==membership,j==membership);
+        B = A(i==ci,j==ci);
         eij(i,j) = sum(sum(B));
     end
 end

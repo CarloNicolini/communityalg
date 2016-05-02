@@ -1,7 +1,9 @@
 function ciu = consensus_clustering_weighted(D,method, reps, tau)
-%CONSENSUS      consensus clustering
+%CONSENSUS_CLUSTERING_WEIGHTED      Consensus clustering modified to work with any 
+%                                   comm.detection method and to work with weighted
+%                                   agreement
 %
-%   CIU = CONSENSUS(D,REPS,TAU) seeks a consensus partition of the 
+%   CIU = CONSENSUS_CLUSTERING_WEIGHTED(D,REPS,TAU) seeks a consensus partition of the 
 %   agreement matrix D. The algorithm used here is almost identical to the
 %   one introduced in Lancichinetti & Fortunato (2012): The agreement
 %   matrix D is thresholded at a level TAU to remove an weak elements. The
@@ -26,6 +28,7 @@ function ciu = consensus_clustering_weighted(D,method, reps, tau)
 %   Inputs:     D,      agreement matrix with entries between 0 and 1
 %                       denoting the probability of finding node i in the
 %                       same cluster as node j
+%               method, a function handle to the method of community detection.
 %               TAU,    threshold which controls the resolution of the
 %                       reclustering
 %               REPS,   number of times that the clustering algorithm is
@@ -39,6 +42,8 @@ function ciu = consensus_clustering_weighted(D,method, reps, tau)
 %   Richard Betzel, Indiana University, 2012
 %
 %   modified on 3/2014 to include "unique_partitions"
+%
+%   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 
 n = length(D); flg = 1;
 while flg == 1

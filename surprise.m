@@ -1,4 +1,4 @@
-function [S,pars] = surprise(A, ci)
+function [S] = surprise(A, ci)
 %SURPRISE      Compute surprise of a vertex partition on a binary network.
 %
 %
@@ -18,7 +18,7 @@ if length(unique(A(:))) ~= 2
 end
 
 % Get the block matrix
-[B,C,~,n,m,p]=comm_mat(A,ci);
+[B,C,~,~,m,p]=comm_mat(A,ci);
 
 nc = sum(C,2); % number of nodes per community
 

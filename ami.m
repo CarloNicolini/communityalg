@@ -1,5 +1,6 @@
-%Program for calculating the Adjusted Mutual Information (AMI) between
-%two clusterings, tested on Matlab 7.0 (R14)
+function [AMI_]=ami(true_mem,mem)
+%AMI Adjusted Mutual Information between two clustering
+%
 %(C) Nguyen Xuan Vinh 2008-2010
 %Contact: n.x.vinh@unsw.edu.au 
 %         vthesniper@yahoo.com
@@ -30,8 +31,6 @@
 %       Normalization and Correction for Chance', N.X. Vinh, Epps, J. and
 %       Bailey, J., Journal of Machine Learning Research, 11(Oct), pages
 %       2837-2854, 2010
-
-function [AMI_]=ami(true_mem,mem)
 if nargin==1
     T=true_mem; %contingency table pre-supplied
 elseif nargin==2

@@ -1,10 +1,7 @@
 function q = asymptotic_modularity(W,ci)
-%ASYMPTOTIC_MODULARITY
-
-%ASYMPTOTIC_MODULARITY      Compute modularity of a vertex partition on a binary network.
+%ASYMPTOTIC_MODULARITY      Compute the asymptotic modularity of a vertex partition on a binary network.
 %
-%
-%   Inputs      W,  undirected weighted or unweighted network.
+%   Inputs:      W,  undirected weighted or unweighted network.
 %               ci, membership vector
 %
 %   Outputs:    Q,  value of Asymptotic Modularity (natural logs).
@@ -12,7 +9,6 @@ function q = asymptotic_modularity(W,ci)
 %               intracluster_pairs, number of edges, number of pairs]
 %
 %   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
-%
 
 n = length(W);
 m = sum(nonzeros(triu(W)));

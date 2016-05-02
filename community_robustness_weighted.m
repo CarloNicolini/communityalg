@@ -1,5 +1,10 @@
 function [orig_groups, pert_groups, p_ij] = community_robustness_weighted(a_ij, perturb_ampl, n_reps, method, prob_threshold)
-    if nargin==0
+%COMMUNITY_ROBUSTNESS_WEIGHTED Implementation of the weighted consensus
+%method
+%
+%   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
+
+if nargin==0
         error('Invalid call to community_robustness. Correct usage is:\n [c1,c2]=community_robustness(a_ij, sigma, theta, n_reps, method)');
     end
     

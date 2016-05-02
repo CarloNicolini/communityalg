@@ -1,5 +1,6 @@
 function memb=powerlaw_membership(nmin,nmax,tau,num_nodes)
 
+
 c = powerlaw_comm_sizes(nmin,nmax,tau,num_nodes);
 
 memb=zeros(1,num_nodes);
