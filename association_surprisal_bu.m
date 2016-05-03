@@ -9,6 +9,17 @@ ncomm = size(B,1);
 Kin=2*diag(B)';
 sKTot=sum(KTot);
 sKin=sum(Kin);
+
+fprintf('N=%d\n',sKTot);
+fprintf('n=%d\n',sKin);
+
+fprintf('x=\n');
+disp(Kin(:)');
+fprintf('M=\n');
+disp(KTot(:)');
+
 den = logbincoeff(sKTot,sKin);
 logpis=bsxfun(@(i,j)(logbincoeff(i,j)-den),KTot(:),Kin(:));
+pis=bsxfun(@(i,j)(bincoeff(i,j)/bincoeff(sKTot,sKin)),KTot(:),Kin(:));
+sum(pis)
 p=-sum(logpis);
