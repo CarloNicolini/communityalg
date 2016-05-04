@@ -1,4 +1,4 @@
-function [Sd] = degree_corrected_sbm(W,ci)
+function [loglikelyhood] = degree_corrected_sbm(W,ci)
 %DEGREE_CORRECTED_SURPRISE      Compute degree corrected surprise of a vertex partition on a binary network.
 %
 %
@@ -15,17 +15,16 @@ function [Sd] = degree_corrected_sbm(W,ci)
 [B,C,KTot,n,m,p] = comm_mat(W,ci);
 ncomm = size(B,1);
 
-%Sd = 0;
-L = 0;
-%den = logbincoeff(p,m);
-nc = sum(C,2)
+loglikelyhood = 0;
+nc = sum(C,2);
+% Simple SBM as in Clauset
 for c=1:ncomm
-    for d=c:ncomm
+    for d=(c+1):ncomm
         %Sd = Sd + logbincoeff(nc(c)*nc(d),B(c,d))-den;
         ncd = nc(c)*nc(d);
         mcd = B(c,d);
-        L = L + mcd*log(mcd/ncd)+(ncd-mcd)*log((ncd-mcd)/ncd);
+        loglikelyhood = loglikelyhood + mcd*log(mcd/ncd)+(ncd-mcd)*log((ncd-mcd)/ncd);
     end
 end
-%Sd = Sd*-1;
-Sd = L;
+
+ncd = nc*nc';
