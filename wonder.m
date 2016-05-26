@@ -11,7 +11,7 @@ function [w, pars] = wonder(W, ci)
 %
 %   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 %
-error('===WARNING==== This implementation is not correct');
+%error('===WARNING==== This implementation is not correct');
 n = length(W);
 m = sum(nonzeros(triu(W)));
 p = n*(n-1)/2;
