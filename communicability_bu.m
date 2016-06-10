@@ -13,4 +13,7 @@ function Gpq = communicability_bu(A)
 %       "Communicability in complex networks",
 %       Phys. Rev. E 77, 036111 (2008).
 %       http://arxiv.org/abs/0707.0756
+%
+% Compute communicability as matrix exponential.
+% From MatlabR2015b expm is very good implemented, no need of manual eigendecomposition. For Octave the performance is not known.
 Gpq = expm(A);
