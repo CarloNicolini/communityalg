@@ -1,1 +1,0 @@
-function anneal_quality(A,method)
