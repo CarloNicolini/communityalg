@@ -1,4 +1,14 @@
 function D = KL(q,p)
+%KL Binary Kullback-Leibler divergence
+% Returns the binary Kullback-Leibler divergence with natural logarithms
+%
+%   Inputs:
+%           q probability distribution q
+%           p probability distribution p
+% Note:
+%
+%   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
+
 if (q==p)
     D=0;
     return;
