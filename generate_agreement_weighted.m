@@ -29,7 +29,7 @@ for i=1:n_reps_agreement
 end
 
 quant_weights = quantile(qual_weights,percentQuant);
-ind_quant_weights = find(qual_weights >= quant_weights);
+ind_quant_weights = find(qual_weights > quant_weights);
 qual_weights = qual_weights(ind_quant_weights);
 disp(['Agreement selected nb of repetition ' num2str(length((qual_weights)))]);
 D = agreement_weighted(all_memberships(ind_quant_weights,:)'+1,qual_weights);

@@ -1,4 +1,4 @@
-function [B,C,K,n,m,p] = comm_mat(W,ci)
+function [B,C,K,n,m,p,Bnorm,commsizes] = comm_mat(W,ci)
 %COMM_MAT 		Returns the block matrix of the community structure of a graph W with given membership vector ci
 %
 %   Inputs      W,  undirected weighted/binary network. 
@@ -35,3 +35,15 @@ B(logical(eye(size(B)))) = B(logical(eye(size(B))))./2;
 n = length(W); % number of nodes
 m = sum(sum(triu(B))); % total sum of edge weight
 p = n*(n-1)/2; % number of pairs
+
+% Compute also normalized version of block matrix
+commsizes = sum(C,2);
+% number of pairs inside every community (no self loops) on diagonal
+% ni*(ni-1)/2
+commpairs = diag(commsizes)*diag(commsizes-1)/2;
+% number of pairs between pairs of communities ni*nj
+commpairs2=diag(commsizes)*ones(length(commsizes))*diag(commsizes);
+blockpairs = commpairs2.*(1-eye(length(commsizes))) + commpairs;
+% on the diagonal the intracommunity densities, outside the diagonal the
+% intercommunity densities
+Bnorm = B./blockpairs;
