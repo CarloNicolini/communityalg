@@ -1,4 +1,4 @@
-function [vimatrix,nmimatrix] = multiple_similarity(memberships)
+function [avgnmi,stdnmi] = multiple_similarity2(memberships)
 %METHOD_BEST Returns the all membership and quality values of a stochastic community detection method repeated a given number of times.
 % Inputs:        A is the binary or weighted adjacency matrix 
 %                method is a function handle to a community detection method.  It works with functions in this form [membership, quality] = method(adjacency)
@@ -8,13 +8,15 @@ function [vimatrix,nmimatrix] = multiple_similarity(memberships)
 % Carlo Nicolini, Istituto Italiano Di Tecnologia (2016)
 
 nreps=size(memberships,1);
-vimatrix=zeros(nreps);
-nmimatrix=zeros(nreps);
+nmivals=[];
 
-for i=1:nreps
-    parfor j=i:nreps
-        [vi,nmi]=partition_distance(memberships(i,:),memberships(j,:));
-        vimatrix(i,j)=vi;
-        nmimatrix(i,j)=nmi;
+parfor i=1:nreps
+    for j=i+1:nreps
+        [~,nmival]=partition_distance(memberships(i,:),memberships(j,:));        
+        nmivals=[nmivals nmival];
+        
     end
 end
+
+avgnmi=mean(nmivals);
+stdnmi=std(nmivals);
