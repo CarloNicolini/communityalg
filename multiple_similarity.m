@@ -1,6 +1,6 @@
 function [avgnmi,stdnmi] = multiple_similarity2(memberships)
-%METHOD_BEST Returns the all membership and quality values of a stochastic community detection method repeated a given number of times.
-% Inputs:        A is the binary or weighted adjacency matrix 
+%MULTIPLE_SIMILARITY Returns the average normalized mutual information and the standard deviation of a memberships matrix, where the nodes memberships of different repetition of a method are the rows 
+% Inputs:        memberships a [nreps x n] 
 %                method is a function handle to a community detection method.  It works with functions in this form [membership, quality] = method(adjacency)
 %                nreps: is the total number of times that `method` is run
 %
@@ -12,9 +12,8 @@ nmivals=[];
 
 parfor i=1:nreps
     for j=i+1:nreps
-        [~,nmival]=partition_distance(memberships(i,:),memberships(j,:));        
+        [~,nmival]=partition_distance(memberships(i,:),memberships(j,:));
         nmivals=[nmivals nmival];
-        
     end
 end
 
