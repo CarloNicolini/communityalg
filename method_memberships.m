@@ -1,5 +1,5 @@
 function [memberships,quals] = method_memberships(A, method, nreps)
-%METHOD_BEST Returns the all membership and quality values of a stochastic community detection method repeated a given number of times.
+%METHOD_MEMBERSHIPS Returns the all membership and quality values of a stochastic community detection method repeated a given number of times.
 % Inputs:        A is the binary or weighted adjacency matrix 
 %                method is a function handle to a community detection method.  It works with functions in this form [membership, quality] = method(adjacency)
 %                nreps: is the total number of times that `method` is run
