@@ -2,6 +2,9 @@ function write_brainet_community(filename, nodesXYZ, nodesColor, nodesSize, node
 % write_brainet
 % write a BrainetViewer compatible .node file for visualization but with
 % every color (community) as a separate file
+if isempty(nodesLabel)
+    nodesLabel = repmat('-',size(nodesXYZ,1),1);
+end
 
 for c=unique(nodesColor)
     filenamecomm = strcat(filename(1:end-5),'_c',num2str(c),'.node');

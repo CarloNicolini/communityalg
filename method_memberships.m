@@ -9,10 +9,11 @@ function [memberships,quals] = method_memberships(A, method, nreps)
 
 n=length(A);
 memberships=zeros(nreps,n);
-quals = zeros(length(A),1);
+quals = zeros(nreps,1);
 
 parfor i=1:nreps
     [membership,qual] = method(A);
+    membership=reindex_membership(membership);
     quals(i)=qual;
     memberships(i,:) = membership(:)';
 end
