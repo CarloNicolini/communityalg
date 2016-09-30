@@ -12,4 +12,4 @@ L = quantum_density(A);
 lambda = eig(L); % compute the spectrum
 % keep only positive eigenvalues
 lambda = lambda(lambda>0);
-S = - sum(lambda.*log(lambda));
+S = - sum(lambda.*log2(lambda));

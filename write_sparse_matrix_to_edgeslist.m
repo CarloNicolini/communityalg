@@ -3,15 +3,4 @@ function write_sparse_matrix_to_edgeslist(A,filename)
 N=length(A);
 [ii,jj,ss] = find(A);
 
-fid = fopen(filename, 'w');
-fprintf(fid, '*vertices %6i\n', N);
-for i = 1:N
-    fprintf(fid, '%d\n',i);
-end
-
-fprintf(fid, '*edges\n');
-for k=1:length(ii)
-   fprintf(fid, '%d %d %g\n', ii(k), jj(k), ss(k));
-end
-fprintf(fid,'\n');
-fclose(fid);
+dlmwrite(filename, [ii jj ss], 'delimiter', '\t');
