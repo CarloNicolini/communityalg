@@ -3,11 +3,10 @@ function [M, Q, res]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
 %   Following the article of MacMahon, Garlaschelli, PhysRev X (2015)
 %   Community detection for correlation matrices
 %
-%   M = correlation_louvain(W);
-%   [M,Q] = correlation_louvain(W,gamma);
-%   [M,Q] = correlation_louvain(W,gamma,M0);
-%   [M,Q] = correlation_louvain(W,gamma,M0,'potts');
-%   [M,Q] = correlation_louvain(W,[],[],B);
+%   M = correlation_louvain(CIJ,T);
+%   [M,Q] = correlation_louvain(CIJ,T);
+%   [M,Q] = correlation_louvain(CIJ,T,M0);
+%   [M,Q] = correlation_louvain(CIJ,T,M0);
 %
 %   The optimal community structure is a subdivision of the network into
 %   nonoverlapping groups of nodes which maximizes the number of within-
@@ -17,10 +16,8 @@ function [M, Q, res]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
 %	Louvain community detection algorithm.
 %
 %   Input:      C       a positive semidefinite correlation matrix
-%               gamma,  resolution parameter (optional)
-%                                gamma  > 1     detects smaller modules
-%                           0 <= gamma  < 1     detects larger modules
-%                                gamma  = 1     (default) 'classic' modularity
+%               T       number of time samples used to build the
+%               correlation matrix, (compulsory)
 %               M0,    	initial community affiliation vector (optional)
 %               B,      objective-function type or custom objective-function matrix (optional)
 %                          	'ITNM' Infinite time series with no global mode
@@ -28,7 +25,7 @@ function [M, Q, res]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
 %                           'FTWM' Finite time series with global mode
 %
 %   Outputs:    M,     	community structure
-%               Q,    	optimized statistic (modularity)
+%               Q,    	optimized quality value
 %
 %   References: Blondel et al. (2008)  J. Stat. Mech. P10008.
 %               Reichardt and Bornholdt (2006) Phys. Rev. E 74, 016110.
@@ -38,7 +35,7 @@ function [M, Q, res]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
 %
 %   Mika Rubinov, U Cambridge 2015
 %   Carlo Nicolini, Istituto Italiano di Tecnologia, 2016
-
+%
 % Check positive semidefiniteness by checking the second argument of chol
 % (see documentation of chol for details)
 [~,p]=chol(CIJ);
@@ -58,9 +55,6 @@ Cnorm=sum(CIJ(:)); % sum of edges (each undirected edge is counted twice)
 res = rmtdecompose(CIJ,T);
 if ~exist('ECIJ','var') || isempty(ECIJ)
     ECIJ = eye(n); % assume the null model for infinitely long time series without global mode
-end
-if ( ~exist('gamma','var') || isempty(gamma)) && ischar(ECIJ)
-    gamma = 1;
 end
 
 % Check if membership vector already exists
