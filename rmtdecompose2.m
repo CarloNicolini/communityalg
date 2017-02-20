@@ -11,64 +11,59 @@ function res = rmtdecompose2(C,T)
 % Check modification of lambdaplus,minus from the original code of MacMahon
 
 N=length(C);
-% Compute the predicted Marchenko-Pastur upper and lower bounds on eigen
-% value distribution of random correlation
-res.lambda_plus =  (1+sqrt(N/T))^2;
-res.lambda_minus = (1-sqrt(N/T))^2;
-
-% Predicted spectrum from random matrix theory
+% Decompose the correlation matrix into its eigenvalues and eigenvectors,
+% store the indices of which columns the sorted eigenvalues come from
+% and arrange the columns in this order
 [V,D] = eig(C);
-if ~issorted(diag(D))
-    [V,D] = eig(A);
-    [D,I] = sort(diag(D));
-    V = V(:, I);
+[eigvals, ind]=sort(diag(D),'ascend'); 
+V = V(:,ind);
+D=diag(sort(diag(D),'ascend')); 
+
+
+% Find the index of the predicted lambda_max, ensuring to check boundary
+% conditions
+Q=T/N;
+sigma = 1 - max(eigvals)/N;
+RMTmaxEig = sigma*(1 + (1.0/Q) + 2*sqrt(1/Q));
+RMTmaxIndex = find(eigvals > RMTmaxEig);
+if isempty(RMTmaxIndex)
+    RMTmaxIndex = N;
+else
+    RMTmaxIndex = RMTmaxIndex(1);
 end
 
-% Check that the eigendecomposition is fine
-%fprintf(2,'Eigendecomposition abs error is %g\n', sum(sum(C*V-V*D)));
-D=D.*(D>=0); % set the very small negative eigenvalues to zero
-eigenvals=diag(D); % eigenvalues as 1D array sorted with the largest at the end
-
-% Obtain a slightly different estimate for lambda_+-
-[res.lambda_plus, res.lambda_minus]
-Q = T/N; 
-sigma = 1-max(eigenvals)/N;
-res.lambda_plus = sigma*(1 + (1.0/Q) + 2*sqrt(1/Q));
-res.lambda_minus = sigma*(1 + (1.0/Q) - 2*sqrt(1/Q));
-[res.lambda_plus, res.lambda_minus]
-% Decompose the original correlation matrix into three components
-% C = Cr + Cg + Cm
-% Cm is the eigendecomposition of global mode Cm = lambda_max |v_max> <v_max|
-% Cg is the eigendecomposition of remaining correlations Cg = sum_{res.lambda_plus<lambda_i<lambda_m} lambda_i |v_i> < v_i|
-% Cr is the eigendecomposition of random-noise correlations Cr =
-% sum_{lambda_i<=res.lambda_plus} lambda_i |v_i> < v_i|
-
-% Since D is sorted with largest eigenvalues on the last diagonal element,
-% the index of lambda_m is N
-% Build the market mode correlation matrix
-im = find(eigenvals==max(eigenvals));
-res.eigenvals=eigenvals; % copy it to the output array
-res.Cm = D(im,im).*V(:,im)*V(:,im)';
-
-
-% Build the random-noise correlations
-res.Cr = zeros(N);
-ir = find(eigenvals<=res.lambda_plus)';
-for k=ir
-    res.Cr = res.Cr + D(k,k).*(V(:,k)*V(:,k)');
+% Find the index of the predicted lambda_min, ensuring the check boundary
+% conditions
+RMTminEig = sigma*(1 + (1.0/Q) - 2*sqrt(1/Q));
+RMTminIndex = find(eigvals < RMTminEig);
+if isempty(RMTminIndex)
+    RMTminIndex = 1;
+else
+    RMTminIndex = RMTminIndex(end);
 end
 
-% Build the remaining correlations as C = Cm + Cr + Cg
-res.Cg = zeros(N);
-ig = find(eigenvals<max(eigenvals) & eigenvals>res.lambda_plus)';
-for k=ig
-    res.Cg = res.Cg + D(k,k).*(V(:,k)*V(:,k)');
-end
+% Determine the average Eigenvalue to rebalance the matrix after removing
+% Any of the noise and/or market mode components
+avgEigenValue = mean(eigvals(1:RMTmaxIndex));
 
-res.Cs = res.Cg + res.Cm;
+% Build a new diagonal matrix consisting of the group eigenvalues
+Dg = zeros(N,N);
 
-% Build the infinite time series correlation hypothesis (no correlation)
-res.Cdelta = eye(N);
+% Replace the random component with average values.
+Dg(1 : (N+1) : (RMTmaxIndex-1)*(N+1)) = avgEigenValue;
 
-% Check that the partial eigendecomposition worked smoothly
-%fprintf('Max-min values of difference between C and its Marcenko-Pastur eigendecomposition [%g %g]\n', max(max(C-res.Cr-res.Cm-res.Cg)),min(min(C-res.Cr-res.Cm-res.Cg)));
+% Add the group component. The N+1 here is just used to increment to the 
+% next diagonal element in the matrix
+Dg(1+(N+1)*(RMTmaxIndex-1) : (N+1) : end-(N+1)) = D(1+(N+1)*(RMTmaxIndex-1) : (N+1) : end-(N+1));
+
+% Build the component correlation matrix from the new diagonal eigenvalue
+% matrix and eigenvector matrix. The eigenvectors corresponding to zero
+% valued eigenvalue entries in Dg will not contribute to M
+
+M = V * Dg * V.';
+
+% Replace the diagonals with 1s
+M = M - diag(diag(M)) + eye(N);
+
+res.Cg = M;
+

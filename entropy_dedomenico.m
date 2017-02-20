@@ -3,18 +3,18 @@ function S = entropy_dedomenico(A,beta)
 %L=graph_laplacian(A);
 L = diag(sum(A)) - A;
 % Compute spectral decomposition of laplacian
-LambdaL=eig(L);
+lambdas=eig(L);
 
 % Compute density matrix rho (eq 3.)
-expminusbetaL = expm(-beta*L);
-rho = expminusbetaL/(trace(expminusbetaL));
+rho = expm(-beta*L);
+rho = rho/trace(rho);
 
 % Compute entropy S of density matrix rho in log base two (bits)
-% LambdaS = eig(rho);
-% Srho = -sum(diag(lambdaS).*log2(lambdaS));
+lambdas_rho = eig(rho);
+Srho = -sum(diag(lambdas_rho).*log2(lambdas_rho));
 
 % Compute partition function (eq 4)
-Z = sum(exp(-LambdaL.*beta));
+Z = sum(exp(-lambdas.*beta));
 
 % Compute entropy of graph (eq 7)
 S = log2(Z) + beta*trace(L*rho);

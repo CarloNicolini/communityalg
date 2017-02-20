@@ -1,10 +1,10 @@
-function M = FinRMT(priceTS)
+function M = FinRMT(X)
 %% FinRMT
 % FinRMT uses Random Matrix Theory (RMT) to create a filtered correlation 
 % matrix from a set of financial time series price data, for example the
 % daily closing prices of the stocks in the S&P
 %% Syntax
-% M=FinRMT(priceTS)
+% M=FinRMT(X)
 %
 %% Description
 % This function eigendecomposes a correlation matrix of time series
@@ -19,7 +19,7 @@ function M = FinRMT(priceTS)
 %
 %
 %% Inputs arguments:
-% priceTS : an mxn matrix containing timeseries' of stock prices. Each column
+% X : an mxn matrix containing timeseries' of stock prices. Each column
 % should be a time series for one financial instrument and each row should 
 % correspond to the value of each instrument at a point in time. For example
 % 32.00   9.43   127.25   ...
@@ -45,12 +45,9 @@ function M = FinRMT(priceTS)
 % and methods based on spectral decompositon are examples of such.
 %
 %%
-
-logs = log(priceTS);    % Convert price data
-diffs = diff(logs);     % to log returns
     
-N = size(diffs,2);      % N is the number of time series
-T = size(diffs,1);      % T is the lenght of each series
+N = size(X,2);      % N is the number of time series
+T = size(X,1);      % T is the lenght of each series
     
     
 %Create the initial correlation matrix and ensure it's symmetric
@@ -58,7 +55,7 @@ T = size(diffs,1);      % T is the lenght of each series
 %errors that would prevent an IsSymmetric call from returning true.
 %This folding of the matrix will suffice to solve that.
     
-C = corrcoef(diffs);    % Create a correlation matrix and ensure
+C = corrcoef(X);    % Create a correlation matrix and ensure
 C = .5 * (C+C');        % it's symmetric
 
 
@@ -93,11 +90,9 @@ else
     RMTminIndex = RMTminIndex(end);
 end
 
-
 % Determine the average Eigenvalue to rebalance the matrix after removing
 % Any of the noise and/or market mode components
 avgEigenValue = mean(eigvals(1:RMTmaxIndex));
-
 
 % Build a new diagonal matrix consisting of the group eigenvalues
 Dg = zeros(N,N);
