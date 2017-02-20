@@ -53,7 +53,7 @@ n=length(CIJ); % number of nodes
 Cnorm=2*sum(sum(triu(CIJ))); % sum of edges (each undirected edge is counted twice)
 
 % Compute the random matrix theory RMT spectrum of CIJ
-res = rmtdecompose(CIJ,T);
+res = rmtdecompose2(CIJ,T);
 if ~exist('ECIJ','var') || isempty(ECIJ)
     ECIJ = eye(n); % assume the null model for infinitely long time series without global mode
 end
