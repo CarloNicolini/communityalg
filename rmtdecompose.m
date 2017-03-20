@@ -10,7 +10,7 @@ function res = rmtdecompose(C,T)
 % PhysRev X,5,021006.
 
 N=length(C);
-% Compute the predicted Marcenk-Pastur upper and lower bounds on eigen
+% Compute the predicted Marchenko-Pastur upper and lower bounds on eigen
 % value distribution of random correlation
 res.lambda_plus =  (1+sqrt(N/T))^2;
 res.lambda_minus = (1-sqrt(N/T))^2;
@@ -23,7 +23,7 @@ if ~issorted(diag(D))
     V = V(:, I);
 end
 % Check that the eigendecomposition is fine
-fprintf('Eigendecomposition abs error is %g\n', sum(sum(C*V-V*D)));
+%fprintf(2,'Eigendecomposition abs error is %g\n', sum(sum(C*V-V*D)));
 D=D.*(D>=0); % set the very small negative eigenvalues to zero
 eigenvals=diag(D); % eigenvalues as 1D array sorted with the largest at the end
 
@@ -62,4 +62,4 @@ res.Cs = res.Cg + res.Cm;
 res.Cdelta = eye(N);
 
 % Check that the partial eigendecomposition worked smoothly
-fprintf('Max-min values of difference between C and its Marcenko-Pastur eigendecomposition [%g %g]\n', max(max(C-res.Cr-res.Cm-res.Cg)),min(min(C-res.Cr-res.Cm-res.Cg)));
+%fprintf('Max-min values of difference between C and its Marcenko-Pastur eigendecomposition [%g %g]\n', max(max(C-res.Cr-res.Cm-res.Cg)),min(min(C-res.Cr-res.Cm-res.Cg)));

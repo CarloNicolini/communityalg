@@ -1,4 +1,4 @@
-function [M, Q, res]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
+function [M, Q, res]=correlation_louvain(CIJ,T,M0,ECIJ)
 %CORRELATION_LOUVAIN     Optimal community structure from correlation matrix
 %   Following the article of MacMahon, Garlaschelli, PhysRev X (2015)
 %   Community detection for correlation matrices
@@ -33,8 +33,9 @@ function [M, Q, res]=correlation_louvain(CIJ,T,gamma,M0,ECIJ)
 %               Sun et al. (2008) Europhysics Lett 86, 28004.
 %               MacMahon et al. (2015) Phys Rev X.
 %
-%   Mika Rubinov, U Cambridge 2015
-%   Carlo Nicolini, Istituto Italiano di Tecnologia, 2016
+%   Basic community_louvain version by "Mika Rubinov, U Cambridge 2015"
+%   RMT modification to handle positive/negative correlation matrices by 
+%   "Carlo Nicolini, Istituto Italiano di Tecnologia, 2016-2017"
 %
 % Check positive semidefiniteness by checking the second argument of chol
 % (see documentation of chol for details)
@@ -49,10 +50,10 @@ if p~=0
 end
 
 n=length(CIJ); % number of nodes
-Cnorm=sum(CIJ(:)); % sum of edges (each undirected edge is counted twice)
+Cnorm=2*sum(sum(triu(CIJ))); % sum of edges (each undirected edge is counted twice)
 
 % Compute the random matrix theory RMT spectrum of CIJ
-res = rmtdecompose(CIJ,T);
+res = rmtdecompose2(CIJ,T);
 if ~exist('ECIJ','var') || isempty(ECIJ)
     ECIJ = eye(n); % assume the null model for infinitely long time series without global mode
 end
@@ -71,11 +72,11 @@ M = Mb; % start with a membership vector already reindexed to have values in 1:c
 if ischar(ECIJ)
     switch ECIJ
         case 'ITNM';
-            ECIJ = (CIJ - eye(n))/Cnorm;
+            ECIJ = (CIJ - eye(n)); % Infinite time series without global mode
         case 'FTNM';
-            ECIJ = (CIJ-res.Cr)/Cnorm; %also called Cs
+            ECIJ = (CIJ-res.Cr); % Finite time series without global mode
         case 'FTWM';
-            ECIJ = (CIJ-(res.Cr-res.Cm))/Cnorm; %also called Cg
+            ECIJ = CIJ - res.Cr - res.Cg; % Finite time series with global mode
         otherwise;
             error('Unknown null model.');
     end
@@ -98,7 +99,7 @@ H=sum(Hnm,2);                                           % node degree
 Hm=sum(Hnm,1);                                          % module degree
 
 Q0 = -inf;
-Q = sum(ECIJ(bsxfun(@eq,M0,M0.')));  %/Cnorm             % compute modularity
+Q = sum(ECIJ(bsxfun(@eq,M0,M0.')));%;/Cnorm             % compute RMT modularity
 first_iteration = true;
 while Q-Q0>1e-16
     flag = true;                                        % flag for within-hierarchy search
@@ -141,7 +142,7 @@ while Q-Q0>1e-16
             B1(v,u)=bm;
         end
     end
-    ECIJ=B1;
+    ECIJ=B1/sum(sum(triu(ECIJ)));
     
     Mb=1:n;                                             % initial module assignments
     Hnm=ECIJ;                                           % node-to-module strength
@@ -151,3 +152,4 @@ while Q-Q0>1e-16
     Q0=Q;
     Q=trace(ECIJ)/Cnorm;                                % compute modularity
 end
+Q

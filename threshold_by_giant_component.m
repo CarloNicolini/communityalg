@@ -19,7 +19,7 @@ function threshold = threshold_by_giant_component(A)
 %   If sign(f(c)) = sign(f(a)) then a ← c else b ← c # new interval
 % EndWhile
 % Output("Method failed.") # max number of steps exceeded
-
+threshold=realmin('double');
 if number_connected_components(A) > 1
     fprintf(2,'Already more than connected components\n');
     threshold = min(A(:));
