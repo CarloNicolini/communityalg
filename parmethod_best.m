@@ -13,7 +13,6 @@ membership = nan(nreps,n);
 parfor i=1:nreps
     [membership(i,:),qual(i)] = method(A);
 end
-
 best_qual=max(qual);
 ibest_qual=find(best_qual==qual);
 ibest_qual=ibest_qual(1);
