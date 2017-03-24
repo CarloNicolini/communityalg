@@ -1,4 +1,8 @@
-function imagesctxt(mat)
+function imagesctxt(mat,clim)
+if nargin==1
+    clim=[];
+end
+
 %IMAGESCTXT Scale data and display as image with text of values impressed.
 %   IMAGESCTXT(...) is the same as IMAGESC(...) except the values are
 %   printed on pixels.
@@ -6,10 +10,10 @@ function imagesctxt(mat)
 %   Carlo Nicolini, Istituto Italiano di Tecnologia (2015).
 %
 
-imagesc(mat);
+imagesc(mat,clim);
 colormap(parula);
 
-textStrings = num2str(mat(:),'%0.2f');  % Create strings from the matrix values
+textStrings = num2str(mat(:),'%1.1g');  % Create strings from the matrix values
 textStrings = strtrim(cellstr(textStrings));  % Remove any space padding
 [x,y] = meshgrid(1:size(mat,2),1:size(mat,1));   % Create x and y coordinates for the strings
 

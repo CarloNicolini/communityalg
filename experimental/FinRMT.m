@@ -67,7 +67,6 @@ C = .5 * (C+C');        % it's symmetric
 V = V(:,ind);
 D=diag(sort(diag(D),'ascend')); 
 
-
 % Find the index of the predicted lambda_max, ensuring to check boundary
 % conditions
 Q=T/N;

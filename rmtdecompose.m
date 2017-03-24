@@ -10,22 +10,35 @@ function res = rmtdecompose(C,T)
 % PhysRev X,5,021006.
 
 N=length(C);
-% Compute the predicted Marchenko-Pastur upper and lower bounds on eigen
-% value distribution of random correlation
-res.lambda_plus =  (1+sqrt(N/T))^2;
-res.lambda_minus = (1-sqrt(N/T))^2;
 
 % Predicted spectrum from random matrix theory
+% [V,D] = eig(C);
+% if ~issorted(diag(D))
+%     [V,D] = eig(C);
+%     [D,I] = sort(diag(D));
+%     V = V(:, I);
+% end
+
 [V,D] = eig(C);
-if ~issorted(diag(D))
-    [V,D] = eig(A);
-    [D,I] = sort(diag(D));
-    V = V(:, I);
-end
+[~, ind]=sort(diag(D),'ascend'); 
+V = V(:,ind);
+D=diag(sort(diag(D),'ascend')); 
+
+
 % Check that the eigendecomposition is fine
 %fprintf(2,'Eigendecomposition abs error is %g\n', sum(sum(C*V-V*D)));
 D=D.*(D>=0); % set the very small negative eigenvalues to zero
 eigenvals=diag(D); % eigenvalues as 1D array sorted with the largest at the end
+
+Q=T/N;
+sigma = 1 - max(eigenvals)/N;
+% Compute the predicted Marchenko-Pastur upper and lower bounds on eigen
+% value distribution of random correlation
+res.lambda_plus = sigma*(1 + (1.0/Q) + 2*sqrt(1/Q));
+res.lambda_minus = sigma*(1 + (1.0/Q) - 2*sqrt(1/Q));
+
+%res.lambda_plus =  (1+sqrt(N/T))^2;
+%res.lambda_minus = (1-sqrt(N/T))^2;
 
 % Decompose the original correlation matrix into three components
 % C = Cr + Cg + Cm
@@ -40,7 +53,6 @@ eigenvals=diag(D); % eigenvalues as 1D array sorted with the largest at the end
 im = find(eigenvals==max(eigenvals));
 res.eigenvals=eigenvals; % copy it to the output array
 res.Cm = D(im,im).*V(:,im)*V(:,im)';
-
 
 % Build the random-noise correlations
 res.Cr = zeros(N);

@@ -66,4 +66,5 @@ M = V * Dg * V.';
 M = M - diag(diag(M)) + eye(N);
 
 res.Cg = M;
+res.Cr = M;
 
