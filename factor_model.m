@@ -15,28 +15,31 @@ function [C,Y,P] = factor_model(ci,T,eta,mu)
 % P: The P-values of the correlations.
 N=length(ci);
 
+% It's important that the number of time samples is greater than the number
+% of nodes, otherwise this method produces communities with external
+% positive correlation as a by-product
 if T<N
     warning('This benchmark is not valid as curse of dimensionality is not respected, See MacMahon Garlaschelli, PhysRevX 2015');
 end
 
+% Initialize the observations vector a TxN matrix of NaNs
 Y=nan(T,N);
 
-% It's important that the number of time samples is greater than the number
-% of nodes, otherwise this method produces communities with external
-% positive correlation as a by-product
-
+% Fill the identical observations in the maximally correlated subsets
 for c=unique(ci(:))'
     Y(:,ci==c) = repmat(randn(T,1),[1,sum(ci==c)]);
 end
 
-% add local noise beta
+% add local noise beta on each time-series
 Y = Y + eta*randn(T,N);
-% add global signal alpha
+
+% add global signal alpha that correlates globally each time series
 Y = Y + mu*repmat(randn(T,1),[1,N]);
 
-% to use with corrcoeff use the transpose as corrcoeff accepts a matrix
-% where rows are variables and observations are columns
+
+% Standardize the time-series
+Y = zscore(Y);
+% Compute the correlation coefficient
 % C is the correlation matrix, P are the P-values of correlation
 % coefficients
-%Y = zscore(Y);
 [C,P] = corrcoef(Y);
