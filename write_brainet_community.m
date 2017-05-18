@@ -7,7 +7,7 @@ if isempty(nodesLabel)
 end
 
 for c=unique(nodesColor(:))'
-    filenamecomm = strcat(filename(1:end-5),'_c',num2str(c),'.node');
+    filenamecomm = strcat(filename,'_c',num2str(c),'.node');
     nodes = find(nodesColor(:)==c);
     write_brainet(filenamecomm,nodesXYZ(nodes,:),nodesColor(nodes),nodesSize(nodes),nodesLabel(nodes,:));
 end
