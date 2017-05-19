@@ -1,4 +1,4 @@
-function threshold = threshold_by_giant_component(A)
+function [At, threshold] = threshold_by_giant_component(A)
 
 % Do a series of bisection up and low to compute the threshold where the
 % graph looses components
@@ -28,15 +28,15 @@ end
 
 a = max(A(:));
 b = min(A(:));
-
-
 TOL = 1E-12;
-
 i = 1;
 imax = 10000;
 
-
-while (i < imax  && abs(b-a)/2 > TOL )
+condition_iterations = true;
+condition_tolerance = true;
+while ( condition_iterations && condition_tolerance )
+    condition_iterations = i<imax;
+    condition_tolerance = abs(b-a)/2 > TOL;
     %fprintf(2,' %g < T < %g %g\n',b,a,b-a);
     c = (a + b)/2;
     if ( (number_connected_components(threshold_absolute(A,c)~=0) -1 == 0) || (b-a)/2 < TOL )
@@ -49,3 +49,5 @@ while (i < imax  && abs(b-a)/2 > TOL )
     end
     i = i + 1;
 end
+
+At = threshold_absolute(A,t);
