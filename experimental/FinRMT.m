@@ -113,6 +113,3 @@ M = V * Dg * V.';
 M = M - diag(diag(M)) + eye(N);
 
 end
-
-
-

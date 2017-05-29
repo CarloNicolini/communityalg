@@ -30,10 +30,10 @@ a = max(A(:));
 b = min(A(:));
 
 
-TOL = 1E-6;
+TOL = 1E-12;
 
 i = 1;
-imax = 1000;
+imax = 10000;
 
 
 while (i < imax  && abs(b-a)/2 > TOL )
