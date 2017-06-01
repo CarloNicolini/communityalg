@@ -50,4 +50,4 @@ while ( condition_iterations && condition_tolerance )
     i = i + 1;
 end
 
-At = threshold_absolute(A,t);
+At = threshold_absolute(A,threshold);
