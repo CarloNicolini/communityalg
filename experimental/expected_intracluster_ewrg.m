@@ -12,9 +12,7 @@ pzeta = sum( nc.*(nc-1)/2  );
 mzeta = sum(diag(Bl));
 wzeta = sum(diag(Bw));
 
-P = 2*Wtot/(N*(N-1) + 2*Wtot);
-
-numerator = (pzeta - mzeta + wzeta*P)*(1-P);
+numerator = (1-pw)/(1-pw+pm*pw) ;
 denominator = (N*(N-1)/2 - m + Wtot*P)*(1-P);
 
 exp_o = numerator/denominator;
