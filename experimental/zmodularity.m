@@ -16,5 +16,5 @@ function Zq = zmodularity(W,ci)
 [B,C,Kc,~,m] = comm_mat(W,ci);
 
 P = Kc/(2*m); % degree matrix
-
-Zq=sum(diag(B)./m - P.^2)/sqrt(sum(P.^2).*(1-sum(P.^2))); % zmodularity definition as in 
+% zmodularity definition as in 
+Zq=sum(diag(B)./m - P.^2)/sqrt(sum(P.^2).*(1-sum(P.^2))); 
