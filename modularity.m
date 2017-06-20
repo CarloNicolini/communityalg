@@ -13,6 +13,6 @@ function q = modularity(W,ci)
 %
 [B,C,K,~,m] = comm_mat(W,ci);
 
-Kc = K/(2*m); % degree matrix
-Mc = diag(B)./m; % intracluster weights matrix
-q=sum(Mc-Kc.^2); % modularity as difference
+P = K/(2*m); % degree matrix
+Mc = diag(B); % intracluster weights matrix
+q=sum(Mc/m-P.^2); % modularity as difference
