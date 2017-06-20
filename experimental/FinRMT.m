@@ -44,21 +44,21 @@ function M = FinRMT(X)
 % Adjaceny Matrix to create the Modularity Matrix. The Louvain Method 
 % and methods based on spectral decompositon are examples of such.
 %
-%%
-    
+
 N = size(X,2);      % N is the number of time series
 T = size(X,1);      % T is the lenght of each series
-    
     
 %Create the initial correlation matrix and ensure it's symmetric
 %It should be symmetric but sometimes matlab introduces small roundoff
 %errors that would prevent an IsSymmetric call from returning true.
 %This folding of the matrix will suffice to solve that.
     
-C = corrcoef(X);    % Create a correlation matrix and ensure
+C = corrcoef(X,'rows','complete');    % Create a correlation matrix and ensure it has no Nans
 C = .5 * (C+C');        % it's symmetric
 
-
+if any(any(isnan(C))) || any(any(isinf(C)))
+    error('There are Nan or Inf in the data, probably some values have zero variance or there are Inf and Nan in the source');
+end
 % Decompose the correlation matrix into its eigenvalues and eigenvectors,
 % store the indices of which columns the sorted eigenvalues come from
 % and arrange the columns in this order
