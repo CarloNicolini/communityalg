@@ -1,10 +1,11 @@
-function S = compute_surprise(F, M, n, p, ignore_check_args)
+function S = compute_surprise(F, M, n, p, base10)
 %COMPUTE_SURPRISE calculates the parameter Surprise for 4 given parameters
 %
 %   Input:  F, number of total vertex pairs in the graph
 %           M, number of total intracluster vertex pairs
 %           n, number of network edges
 %           p, number of intracluster network edges.
+%			base10, if true use base 10 logarithms
 %
 % You should have received this program together with
 %
@@ -37,8 +38,10 @@ function S = compute_surprise(F, M, n, p, ignore_check_args)
 %
 %   Carlo Nicolini, Istituto Italiano di Tecnologia (2016).
 
-if nargin < 5 
-    argsok = check_urn_model_validity(F,M,n,p);
+
+argsok = check_urn_model_validity(F,M,n,p);
+if nargin<5
+	base10=true;
 end
 
 min = M;
@@ -46,11 +49,11 @@ if(n < M)
     min = n;
 end
 
-logP = logHyperProbability(F,M,n,p);
+logP = logHyperProbability(F,M,n,p,base10);
 stop = false;
 while ~stop && (p < min)
     p = p+1;
-    nextLogP = logHyperProbability(F,M,n,p);
+    nextLogP = logHyperProbability(F,M,n,p,base10);
     [stop, logP] = sumLogProbabilities(nextLogP, logP);
 end
 

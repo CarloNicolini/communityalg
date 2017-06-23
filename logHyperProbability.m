@@ -1,3 +1,5 @@
-function logH = logHyperProbability(F, M, n, p)
+function logH = logHyperProbability(F, M, n, p, base10)
 logH = logC(p,M) + logC(n-p,F-M) - logC(n,F);
-logH = logH/log(10);
+if base10
+	logH = logH/log(10);
+end
