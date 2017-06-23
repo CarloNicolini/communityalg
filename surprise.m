@@ -21,11 +21,15 @@ if length(unique(A(:))) ~= 2
 end
 
 % Get the block matrix
-[B,C,~,~,m,p]=comm_mat(A,ci);
+[B,C,~,~,L,M]=comm_mat(A,ci);
 
 nc = sum(C,2); % number of nodes per community
 
-mc = sum(diag(B)); % number of intracluster edges
-pc = sum(nc.*(nc-1)/2); % number of intracluster pairs
-[mc,m,pc,p]
-S=compute_surprise(p, pc, m, mc, base10);
+Lin = sum(diag(B)); % number of intracluster edges
+Min = sum(nc.*(nc-1)/2); % number of intracluster pairs
+[Lin,L,Min,M]
+S=compute_surprise(M, Min, L, Lin, base10);
+
+% Compute the binomial surprise
+-arrayfun(@(i)(logC(i,L)+i*log(Min/M)+(L-i)*(log(1-Min/M))),Lin)
+L*KL(Lin/L, Min/M)
