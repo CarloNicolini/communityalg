@@ -24,5 +24,5 @@ nc = sum(C,2); % number of nodes per community
 
 mc = sum(diag(B)); % number of intracluster edges
 pc = sum(nc.*(nc-1)/2); % number of intracluster pairs
-
+[p,pc,m,mc]
 S=compute_surprise(p, pc, m, mc);
