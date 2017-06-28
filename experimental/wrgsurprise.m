@@ -25,5 +25,5 @@ S=compute_surprise(M+W-1, Min+Win-1, W, Win,base10); %Checked with Mathematica
 
 % Compute the binomial approximation, too
 % This is only for the dominant term in the hypergeometric sum
--arrayfun(@(i)(logC(i,W)+i*log((i+Min-1)/(W+M-1))+(W-i)*(log(1-(i+Min-1)/(W+M-1)))),Win)
-W*KL(Win/W, (Win+Min)/(W+M))
+disp( -arrayfun(@(i)(logC(i,W)+i*log((i+Min-1)/(W+M-1))+(W-i)*(log(1-(i+Min-1)/(W+M-1)))),Win) )
+disp( W*KL(Win/W, (Win+Min)/(W+M)) )

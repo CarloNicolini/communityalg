@@ -1,4 +1,4 @@
-function W = wrg2(n,pm,pw,wmax)
+function W = wrg2(n,pw,wmax)
 % Generate the weighted adjacency matrix from the Enhanced Weighted Random
 % Graph model.
 

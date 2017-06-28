@@ -23,6 +23,6 @@ end
 
 function w = sample_weights(n,p,wmax)
 % Check the histogram with
-hold on; histogram(randp(Q,1,1000),'Normalization','probability'); plot(1:wmax+1,Q,'ro-'); hold off;
+%hold on; histogram(randp(Q,1,1000),'Normalization','probability'); plot(1:wmax+1,Q,'ro-'); hold off;
 w = randp(qij(p,0:wmax),n);
 end

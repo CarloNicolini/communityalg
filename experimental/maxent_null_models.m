@@ -1,4 +1,4 @@
-function [sol,M,exitflag] = maxent_null_models(model,M)
+function [sol,M,exitflag] = maxent_null_models(method,M)
 % Credits to Rossana Mastrandrea, taken from the MAXandSAM package
 % http://nl.mathworks.com/matlabcentral/fileexchange/46912-max-sam-package-zip?focused=3825900&tab=function
 % Readapted and fixed some typos here and there
@@ -70,14 +70,14 @@ n = length(h);
 f = 0;
 switch upper(method)
     case 'UBCM' % Undirected Binary Configuration Model
-        ftest = f + sum(sum(triu(M.*log(h*h') - log(1+h*h'),1)));
+        %ftest = f + sum(sum(triu(M.*log(h*h') - log(1+h*h'),1)));
         for i = 1:n 
             for j = (i+1):n
                 f = f + (M(i,j)*log(h(i)*h(j)) - log(1 + h(i)*h(j)));
             end
         end
-       disp('f-ftest=');
-       [f ftest]
+       %disp('f-ftest=');
+       %[f ftest]
     case 'UWCM'   % Undirected Weighted Configuration Model
         x=h;
         for i=1:n
