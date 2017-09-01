@@ -25,7 +25,7 @@ for r=rcliques
 	asym_surp_single = [asym_surp_single; asymptotic_surprise(A,membsingle)];
 	asym_surp_pair = [asym_surp_pair; asymptotic_surprise(A,membpair)];
 	% Surprise
-	surp_single = [surp_single; surprise(A,membsingle,)];
+	surp_single = [surp_single; surprise(A,membsingle,base10)];
 	surp_pair = [surp_pair; surprise(A,membpair,base10)];
 end
 
