@@ -1,4 +1,4 @@
-function [memberships,quals] = method_memberships(A, method, nreps)
+function [memberships,quals] = parmethod_memberships(A, method, nreps)
 %METHOD_MEMBERSHIPS Returns the all membership and quality values of a stochastic community detection method repeated a given number of times.
 % Inputs:        A is the binary or weighted adjacency matrix 
 %                method is a function handle to a community detection method.  It works with functions in this form [membership, quality] = method(adjacency)
@@ -11,7 +11,7 @@ n=length(A);
 memberships=zeros(nreps,n);
 quals = zeros(nreps,1);
 
-for i=1:nreps
+parfor i=1:nreps
     [membership,qual] = method(A);
     membership=reindex_membership(membership);
     quals(i)=qual;
