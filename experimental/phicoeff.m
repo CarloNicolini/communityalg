@@ -1,4 +1,4 @@
-function phi = community_phi(memb_a, memb_b)
+function phi = phicoeff(memb_a, memb_b)
 
 % Implementation of the phi coefficient as in 
 % "Network community structure alterations in adult schizophrenia:
