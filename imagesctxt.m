@@ -13,7 +13,7 @@ end
 imagesc(mat,clim);
 colormap(parula);
 
-textStrings = num2str(mat(:),'%1.2g');  % Create strings from the matrix values
+textStrings = num2str(mat(:),'%1.1g');  % Create strings from the matrix values
 textStrings = strtrim(cellstr(textStrings));  % Remove any space padding
 [x,y] = meshgrid(1:size(mat,2),1:size(mat,1));   % Create x and y coordinates for the strings
 
