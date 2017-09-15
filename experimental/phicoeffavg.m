@@ -1,4 +1,4 @@
-function [avgphi, phi, p_values] = phicoeffavg(all_memberships)
+function [avgphi, allphi, allpvals, avgpval] = phicoeffavg(all_memberships)
 
 % Implementation of the phi coefficient as in
 % "Network community structure alterations in adult schizophrenia:
@@ -14,8 +14,8 @@ function [avgphi, phi, p_values] = phicoeffavg(all_memberships)
 
 numnodes = size(all_memberships,2); % number of nodes
 numsubjs = size(all_memberships,1); % number of subjects
-
 delta = nan(numnodes,numnodes,numsubjs);
+corr_test='right'; % tests that the correlation is greater than zero
 
 for subj=1:numsubjs
     CijA = double(bsxfun(@eq,all_memberships(subj,:), unique(all_memberships(subj,:))'));
@@ -23,14 +23,14 @@ for subj=1:numsubjs
 end
 
 % Now computes the phi coefficient
-phi = nan(numnodes,numsubjs,numsubjs);
-p_values = nan(numnodes,numsubjs,numsubjs);
+allphi = nan(numnodes,numsubjs,numsubjs);
+allpvals = nan(numnodes,numsubjs,numsubjs);
 for node=1:numnodes
     for subjA=1:numsubjs
-        for subjB=1:numsubjs
-            [phival, pval] = corr(delta(node,:,subjA)',delta(node,:,subjB)');
-            phi(node,subjA,subjB) = phival;
-            p_values(node,subjA,subjB) = pval;
+        for subjB=subjA+1:numsubjs %exclude diagonals
+            [phival, pval] = corr(delta(node,:,subjA)',delta(node,:,subjB)','tail',corr_test);
+            allphi(node,subjA,subjB) = phival;
+            allpvals(node,subjA,subjB) = pval;
         end
     end
 end
@@ -41,7 +41,7 @@ for node=1:numnodes
     % Select the upper triangular part of the phi ND array with the phi
     % coefficients of each node for every pair of subjects
     % put nan in the lower triangular and then ignores them
-    phivals = triu(squeeze(phi(node,:,:)),1) + tril(nan(numsubjs));
+    phivals = triu(squeeze(allphi(node,:,:)),1) + tril(nan(numsubjs));
     phivals = phivals(~isnan(phivals));
     %phivals = triu(squeeze(phi(node,:,:)),1);
     % Compute the average over the pairs of subjects of the phi for each
@@ -50,4 +50,7 @@ for node=1:numnodes
     zphi = zphi(~isinf(zphi));
     avgphi(node) = tanh(mean(zphi));
 end
+avgpval = nanmean(nanmean(allpvals,3),2);
+avgphi = nanmean(nanmean(allphi,3),2);
+
 end
