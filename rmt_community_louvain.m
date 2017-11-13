@@ -24,6 +24,9 @@ generator_pre_filt = @(TS,ROIs)tanh(mean(atanh(reshape(cell2mat(arrayfun(@(subj)
 % correlation matrices of the subjects. Group level filtering
 generator_post_filt = @(TS,ROIs)RMTFilter(tanh(mean(atanh(reshape(cell2mat(arrayfun(@(subj)corrcoef(squeeze(TS(subj,:,ROIs))),1:size(TS,1),'UniformOutput',false)),[length(ROIs),length(ROIs),size(TS,1)])),3)),length(ROIs),size(TS,2));
 
+%% another possibility is to concatenate all the time series
+generator_concatenate = @(TS,ROIs)RMTFilter(catalongfirstdim(squeeze(TS(:,:,ROIs))));
+
 if nargin==1
     generator = generator_post_filt;
 end
@@ -33,6 +36,8 @@ if nargin==2
             generator = generator_pre_filt;
         case 'postfiltering'
             generator = generator_post_filt;
+        case 'concatenate'
+            generator = generator_concatenate;
         case 'custom'
             generator = varargin{2};
         otherwise
@@ -47,8 +52,8 @@ cd_wrapper = @(Z)method_best(Z, @(Z)community_louvain(Z,[],[], Z),10);
 
 % Finally, this calls the hierarchical_community_detection on the input
 % matrix X with the method defined previously and on the nodes selected
-% The "method" wrapper is necessary to pass two variables to the  community detection method. 
-% It is responsible for the generation of the right input correlation filtered matrix, as selected from the nodes 
+% The "method" wrapper is necessary to pass two variables to the  community detection method.
+% It is responsible for the generation of the right input correlation filtered matrix, as selected from the nodes
 % fed as input. ...
 method_hierarchical = @(X,method, nodes) hierarchical_timeseries_community_detection( X, method, nodes);
 
@@ -220,4 +225,8 @@ Dg(1+(N+1)*(RMTmaxIndex-1) : (N+1) : end-(N+1)) = D(1+(N+1)*(RMTmaxIndex-1) : (N
 M = V * Dg * V.';
 % Replace the diagonals with 1s
 M = M - diag(diag(M)) + eye(N);
+end
+
+function TScat = catalongfirstdim(TS)
+TScat = reshape(permute(TS,[3 2 1]),fliplr([size(TS,1)*size(TS,2),size(TS,3)]))';
 end
