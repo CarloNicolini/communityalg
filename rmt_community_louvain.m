@@ -27,6 +27,11 @@ generator_post_filt = @(TS,ROIs)RMTFilter(tanh(mean(atanh(reshape(cell2mat(array
 %% another possibility is to concatenate all the time series
 generator_concatenate = @(TS,ROIs)RMTFilter(catalongfirstdim(squeeze(TS(:,:,ROIs))));
 
+% Reference:
+% Uncovering hidden functional brain organization by random matrix theory
+% Assaf Almog, Ori Roethler, Renate Buijink, Stephan Michel, Johanna H Meijer, Jos H. T. Rohling, Diego Garlaschelli
+% https://arxiv.org/abs/1708.07046
+
 if nargin==1
     generator = generator_post_filt;
 end
