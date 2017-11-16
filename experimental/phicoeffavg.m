@@ -51,6 +51,6 @@ for node=1:numnodes
     avgphi(node) = tanh(mean(zphi));
 end
 avgpval = nanmean(nanmean(allpvals,3),2);
-avgphi = nanmean(nanmean(allphi,3),2);
+avgphi = nanmean(nanmean(allphi,3),2)';
 
 end

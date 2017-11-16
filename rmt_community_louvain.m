@@ -31,6 +31,12 @@ generator_concatenate = @(TS,ROIs)RMTFilter(catalongfirstdim(squeeze(TS(:,:,ROIs
 % Uncovering hidden functional brain organization by random matrix theory
 % Assaf Almog, Ori Roethler, Renate Buijink, Stephan Michel, Johanna H Meijer, Jos H. T. Rohling, Diego Garlaschelli
 % https://arxiv.org/abs/1708.07046
+%
+% Community Detection for Correlation Matrices
+% Mel MacMahon and Diego Garlaschelli
+% Phys. Rev. X 5, 021006 – Published 14 April 2015
+% Code adapted from:
+% https://it.mathworks.com/matlabcentral/fileexchange/49011-random-matrix-theory--rmt--filtering-of-financial-time-series-for-community-detection
 
 if nargin==1
     generator = generator_post_filt;
