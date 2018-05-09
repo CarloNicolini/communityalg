@@ -1,4 +1,4 @@
-function laplacian_eigenplot(A)
+function y = laplacian_eigenplot(A)
 n=length(A);
 % 1. compute the diagonal degree matrix
 D = diag(sum(A));
@@ -17,4 +17,5 @@ hold on;
 nbins = 200;
 histogram(eig(L),nbins,'Normalization','countdensity');
 sigma=0.005;
-plot(x, kdesmooth(eig(L),x,sigma),'r','LineWidth',2);
+y = kdesmooth(eig(L),x,sigma);
+plot(x, y,'r','LineWidth',2);
